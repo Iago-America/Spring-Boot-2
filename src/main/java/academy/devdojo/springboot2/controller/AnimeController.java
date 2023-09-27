@@ -23,17 +23,23 @@ public class AnimeController {
     private final AnimeService animeService;
 
     //ResponseEntity -> Status da requisição
+    //Existe uma diferença entre o RequestParam e o PathVariable.
     @GetMapping
     public ResponseEntity<List<Anime>> list() {
         log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         //return new ResponseEntity<>(animeService.listAll(), HttpStatus.OK);
         return ResponseEntity.ok(animeService.listAll());
     }
-
     @GetMapping(path = "/{id}")
     public ResponseEntity<Anime> findById(@PathVariable long id) {
         return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
     }
+
+    @GetMapping(path = "/find")
+    public ResponseEntity<List<Anime>> findByName(@RequestParam String name) {
+        return ResponseEntity.ok(animeService.findByName(name));
+    }
+
     @PostMapping
     public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody) {
         return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
